@@ -3,6 +3,7 @@
     <test name="CucumberTests">
         <classes>
             <class name="com.saucedemo.tests.LoginTest" />
+            <class name="com.saucedemo.tests.CheckoutTest" />
         </classes>
     </test>
 </suite>

@@ -9,17 +9,16 @@ import com.saucedemo.base.BaseTest;
 public class CheckoutTest extends BaseTest {
 
     @Test
-    public void testAddToCartAndGoToCheckout() {
+    public void testAddToCartAndGoToCheckout() throws InterruptedException {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login("standard_user", "secret_sauce");
 
         ProductsPage productsPage = new ProductsPage(driver);
         Assert.assertEquals(productsPage.getProductTitle(), "Products");
 
-        productsPage.addBackpackToCart();
-        productsPage.clickCartButton();
+        productsPage.addFirstThreeItemsToCart();
+        productsPage.goToCart();
 
-        // Tambahkan assert lain atau navigasi ke checkout jika kamu punya halaman
-        // lanjutannya
+        Thread.sleep(3000);
     }
 }
