@@ -30,6 +30,6 @@ public class LoginTest extends BaseTest {
             assertTrue(loginPage.getErrorMessage().length() > 0, "Expected an error message.");
         }
 
-        Thread.sleep(2000);
+        Thread.sleep(1000);
     }
 }
