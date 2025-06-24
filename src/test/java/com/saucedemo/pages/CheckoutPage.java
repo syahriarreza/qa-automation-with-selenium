@@ -2,60 +2,65 @@ package com.saucedemo.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
+import org.openqa.selenium.support.FindBy;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.saucedemo.abstractcomponent.AbstractComponent;
 
-public class CheckoutPage {
+public class CheckoutPage extends AbstractComponent {
     private WebDriver driver;
-    private WebDriverWait wait;
 
-    private By title = By.className("title");
-    private By firstName = By.xpath("//input[@id=\"first-name\"]");
-    private By lastName = By.xpath("//input[@id=\"last-name\"]");
-    private By zipCode = By.xpath("//input[@id=\"postal-code\"]");
-    private By continueBtn = By.id("continue");
-    private By finishBtn = By.id("finish");
+    @FindBy(className = "title")
+    private WebElement titleEl;
+
+    @FindBy(id = "first-name")
+    private WebElement firstNameInputEl;
+
+    @FindBy(id = "last-name")
+    private WebElement lastNameInputEl;
+
+    @FindBy(id = "postal-code")
+    private WebElement zipCodeInputEl;
+
+    @FindBy(id = "continue")
+    private WebElement continueBtnEl;
+
+    @FindBy(id = "finish")
+    private WebElement finishBtnEl;
+
     private By completeHeader = By.className("complete-header");
 
     public CheckoutPage(WebDriver driver) {
+        super(driver); // Call to the constructor of parent (AbstractComponent)
         this.driver = driver;
-
-        wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(continueBtn));
-
-        assertEquals(this.getPageTitle(), "Checkout: Your Information");
+        PageFactory.initElements(driver, this);
     }
 
     public String getPageTitle() {
-        return driver.findElement(title).getText();
+        // return driver.findElement(title).getText();
+        return titleEl.getText();
     }
 
     public void fillBuyerData() {
-        driver.findElement(firstName).sendKeys("John");
-        driver.findElement(lastName).sendKeys("Doe");
-        driver.findElement(zipCode).sendKeys("60246");
+        firstNameInputEl.sendKeys("John");
+        lastNameInputEl.sendKeys("Doe");
+        zipCodeInputEl.sendKeys("60246");
     }
 
     public void goToContinue() {
-        driver.findElement(continueBtn).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(finishBtn));
-        assertEquals(this.getPageTitle(), "Checkout: Overview");
+        continueBtnEl.click();
     }
 
     public void goToFinish() {
-        driver.findElement(finishBtn).click();
-        assertEquals(this.getPageTitle(), "Checkout: Complete!");
+        finishBtnEl.click();
     }
 
-    public void assertComplete() {
-        WebElement completeEl = driver.findElement(completeHeader);
-        assertNotNull(completeEl);
-        assertTrue(completeEl.getText().toLowerCase().contains("thank you"));
+    public String getCompleteHeaderText() {
+        if (isElementPresent(completeHeader) == false) {
+            return ""; // Return empty string if the complete header is not present
+        }
+
+        return driver.findElement(completeHeader).getText();
     }
 }

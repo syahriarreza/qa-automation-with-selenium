@@ -3,57 +3,70 @@ package com.saucedemo.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
+import com.saucedemo.abstractcomponent.AbstractComponent;
 
 import java.util.List;
 
-public class ProductsPage {
+public class ProductsPage extends AbstractComponent {
     private WebDriver driver;
-    private WebDriverWait wait;
 
-    private By title = By.className("title");
+    @FindBy(className = "title")
+    private WebElement titleEl;
+
+    @FindBy(css = "button.btn_inventory")
+    private WebElement addToCartButtonsEl;
+
+    @FindBy(className = "shopping_cart_link")
+    private WebElement cartBtnEl;
+
+    @FindBy(id = "checkout")
+    private WebElement checkoutBtnEl;
+
+    @FindBy(className = "shopping_cart_badge")
+    private WebElement cartBadgeEl;
+
     private By productItems = By.cssSelector(".inventory_item");
     private By addToCartButtons = By.cssSelector("button.btn_inventory");
-    private By cartBtn = By.className("shopping_cart_link");
-    private By checkoutBtn = By.id("checkout");
+    private By cartBadge = By.className("shopping_cart_badge");
 
     public ProductsPage(WebDriver driver) {
+        super(driver); // Call to the constructor of parent (AbstractComponent)
         this.driver = driver;
-        wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10));
-        assertEquals(this.getPageTitle(), "Products");
-    }
-
-    public boolean isOnProductsPage() {
-        return driver.findElement(title).isDisplayed();
+        PageFactory.initElements(driver, this);
     }
 
     public String getPageTitle() {
-        return driver.findElement(title).getText();
+        return titleEl.getText();
     }
 
-    public void addFirstThreeItemsToCart() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(productItems));
-
+    public void addSomeItemsToCart(int itemCount) {
         List<WebElement> products = driver.findElements(productItems);
         List<WebElement> productAddToCartBtns = products.stream().map(p -> p.findElement(addToCartButtons)).toList();
-        assertTrue(productAddToCartBtns.size() > 0);
 
-        int itemCount = Math.min(3, productAddToCartBtns.size()); // only add if at least 3 exist
-        for (int i = 0; i < itemCount; i++) {
+        // only add if at least itemCount items exist
+        int itemCountExist = Math.min(itemCount, productAddToCartBtns.size());
+        for (int i = 0; i < itemCountExist; i++) {
             productAddToCartBtns.get(i).click();
         }
     }
 
+    public int getCartItemCount() {
+        if (isElementPresent(cartBadge)) {
+            String badgeText = driver.findElement(cartBadge).getText();
+            return Integer.parseInt(badgeText);
+        }
+
+        return 0; // No items in cart
+    }
+
     public void goToCart() {
-        driver.findElement(cartBtn).click();
-        assertEquals(this.getPageTitle(), "Your Cart");
+        cartBtnEl.click();
     }
 
     public void goToCheckout() {
-        driver.findElement(checkoutBtn).click();
+        checkoutBtnEl.click();
     }
 }
