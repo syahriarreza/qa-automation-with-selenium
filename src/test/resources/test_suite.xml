@@ -2,8 +2,9 @@
 <suite name="SeleniumSuite">
     <test name="SeleniumTests">
         <classes>
-            <class name="com.saucedemo.tests.LoginTest" />
-            <class name="com.saucedemo.tests.CheckoutTest" />
+            <!-- <class name="com.saucedemo.tests.LoginTest" /> -->
+            <!-- <class name="com.saucedemo.tests.CheckoutTest" /> -->
+            <class name="com.saucedemo.TestRunner" />
         </classes>
     </test>
 </suite>
