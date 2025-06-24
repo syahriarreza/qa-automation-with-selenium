@@ -45,7 +45,7 @@ Create a `.env` file in your root directory with the following:
 ```properties
 BASE_URL=https://www.saucedemo.com
 BROWSER=chrome
-DRIVER_PATH=D:\\Documents\\Desktop\\chromedriver-win64\\chromedriver.exe
+DRIVER_PATH=C:\\path\\to\\chromedriver\\chromedriver-win64\\chromedriver.exe
 ```
 
 > `.env` is automatically loaded via `io.github.cdimascio:dotenv-java` in `Hooks.java`.
